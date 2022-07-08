@@ -132,3 +132,4 @@ database/database.db
 .pyre/
 .idea/*
 .env
+log
