@@ -9,7 +9,7 @@ from states.states import FSMAdminStates
 from utils.decorators import exception_control
 
 
-@dp.message_handler(commands=['my_id', 'mailing', 'commands'], state='*')
+@dp.message_handler(commands=['my_id', 'mailing', 'commands', 'how_users'], state='*')
 @exception_control.func_exception_control
 async def admins_commands_handler(message: Message, state: FSMContext) -> None:
     command: str = message.get_command()
@@ -23,6 +23,10 @@ async def admins_commands_handler(message: Message, state: FSMContext) -> None:
 
         elif command == '/my_id':
             await AdminsHendlers.my_id(update=message)
+
+        elif command == '/how_users':
+            num_users = dbase.select_all_users(update=message, only_len=True)
+            await bot.send_message(chat_id=message.from_user.id, text=f'В базе: {num_users} пользователей')
 
         elif command == '/mailing':
             await bot.send_message(chat_id=message.from_user.id, text=f'Введите пароль:')
@@ -49,6 +53,7 @@ class AdminsHendlers:
         await bot.send_message(chat_id=update.chat.id, text=f'<b>Команды администратора:</b>\n'
                                                             f'<b>/commands</b> - список команд\n'
                                                             f'<b>/my_id</b> - мой id\n'
+                                                            f'<b>/how_users</b> - кол-во пользователей в базе\n'
                                                             f'<b>/mailing</b> - рассылка пользователям бота\n')
 
     @staticmethod
@@ -62,10 +67,9 @@ class AdminsHendlers:
             await state.reset_state()
         else:
 
-            # TODO
-            # print(current_state)
-            # print(current_state is FSMAdminStates.password_mailing)  # ???????????????
-            # print(current_state == 'FSMAdminStates:password_mailing')  # ????????????
+            # print(current_state, type(current_state))  # FSMAdminStates:password_mailing , str
+            # print(current_state is FSMAdminStates.password_mailing)  # False
+            # print(current_state == 'FSMAdminStates:password_mailing')  # True
 
             if current_state == 'FSMAdminStates:password_mailing':
                 await bot.send_message(chat_id=update.chat.id, text=f'Введите сообщение для рассылки:')

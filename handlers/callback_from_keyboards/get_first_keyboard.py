@@ -15,8 +15,11 @@ async def func_get_first_keyboard(call: CallbackQuery, state: FSMContext, data_f
     зависимости от нажатой кнопки(callback), изменяет состояние пользователя.
     """
     logger.debug(f'-> INCOMING -> callback from first keyboard {call.data}')
-    await bot.edit_message_reply_markup(chat_id=call.from_user.id, message_id=call.message.message_id,
-                                        reply_markup=None)
+
+    # Поменял на удаление, так лучше
+    # await bot.edit_message_reply_markup(chat_id=call.from_user.id, message_id=call.message.message_id,
+    #                                     reply_markup=None)
+    await bot.delete_message(chat_id=call.from_user.id, message_id=call.message.message_id)
 
     if data_from_middlewares.balance_requests > 0:
         dbase.minus_from_balance_requests(update=call, user_id=call.from_user.id)

@@ -24,12 +24,13 @@ async def func_response(message: Message, state: FSMContext,
 
     if adverts and adverts != 'null':
         current_state = await state.get_state()
+        line = '&#127760 Реальные ставки рекламы в\n'
+        if current_state.endswith('card_request'):
+            line += f"карточке товара по артикулу: " \
+                   f"<b><i><a href='{config.LinkSTART}{nmid}{config.LinkEND}'>{nmid}</a></i></b>\n\n"
 
-        if current_state is FSMCommonStates.card_request:  # endswith('card_request'):
-            line = f"&#127760 Реальные ставки рекламы в карточке товара по артикулу: " \
-                   f"<b><a href='{config.LinkSTART}{nmid}{config.LinkEND}'>{nmid}</a></b>\n"
-        else:
-            line = ''
+        elif current_state.endswith('searching_request'):
+            line += f"поиске по запросу: <b><i>{message.text}</i></b>\n\n"
 
         for num, advert in enumerate(adverts):
             product_id = advert.get(key_id)
@@ -62,5 +63,6 @@ async def func_response(message: Message, state: FSMContext,
         logger.warning('-> BAD -> return not response')
 
     await state.set_state(state=FSMCommonStates.second_keyboard)
+    # await state.reset_state()
     logger.debug('-> next state -> second_keyboard')
 

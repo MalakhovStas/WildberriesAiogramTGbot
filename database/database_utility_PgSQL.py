@@ -98,16 +98,16 @@ class Database:
         return user
 
     @exception_control.func_exception_control
-    def select_all_users(self, update: Message | CallbackQuery) -> tuple:
+    def select_all_users(self, update: Message | CallbackQuery, only_len: bool = False) -> tuple | int:
         with self.database:
             self.cursor.execute("SELECT user_id FROM users")
-            users = self.cursor.fetchone()
+            users = tuple(user[0] for user in self.cursor.fetchall())
         if not users:
             logger.error(f'-> BAD -> NOT users in database -> return -> []')
-            return tuple()
+            return tuple() if not only_len else 0
         else:
             logger.debug(f'-> OK -> SELECT all users -> return -> {len(users)} user_id')
-            return users
+            return users if not only_len else len(users)
 
     @exception_control.func_exception_control
     def select_password(self, update: Message | CallbackQuery, user_id: int) -> str:

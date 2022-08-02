@@ -17,15 +17,21 @@ async def func_get_keyboard(call: CallbackQuery, state: FSMContext) -> None:
     """
     logger.debug(f'-> INCOMING -> callback: {call.data}')
 
-    await bot.delete_message(chat_id=call.message.chat.id, message_id=call.message.message_id)
+    # await bot.delete_message(chat_id=call.message.chat.id, message_id=call.message.message_id)
+    await bot.edit_message_reply_markup(
+        chat_id=call.message.chat.id, message_id=call.message.message_id, reply_markup=None)
 
-    if call.data == 'send_support':
-        await state.reset_state()
-        await bot.delete_message(chat_id=call.from_user.id, message_id=call.message.message_id)
-        logger.debug(f'-> OK -> return to support -> reset state')
-
-    elif call.data == 'check_more':
+    if call.data == 'check_more':
         keyboard = await first_keyboard.func_keyboard(update=call)
         await bot.send_message(chat_id=call.from_user.id, text=BotSays.say('check_more'), reply_markup=keyboard)
         await state.set_state(state=FSMCommonStates.first_keyboard)
         logger.debug(f'-> OK -> next state -> searching_request')
+
+    # это условие не работает
+    elif call.data == 'send_support':
+        await state.reset_state()
+        await bot.delete_message(chat_id=call.from_user.id, message_id=call.message.message_id)
+        logger.debug(f'-> OK -> return to support -> reset state')
+
+
+

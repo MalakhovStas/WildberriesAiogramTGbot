@@ -40,21 +40,27 @@ async def start(message: Message, state: FSMContext, data_from_middlewares) -> N
         admins = tuple(map(int, ADMINS.split(', '))) if ADMINS else tuple()
         tech_admins = tuple(map(int, TECH_ADMINS.split(', '))) if TECH_ADMINS else tuple()
 
-        if message.from_user.id in admins or tech_admins:
+        if (message.from_user.id in admins) or (message.from_user.id in tech_admins):
             position, password = 'admin', DEFAULT_ADMINS_PASSWORD
         else:
-            position, password = None, None
+            position, password = 'user', None
 
         dbase.insert_user(update=message, user_id=message.from_user.id, name=message.from_user.full_name,
                           access='allowed', username=message.from_user.username, referer_id=referer_id,
                           balance_requests=config.START_BALANCE_REQUESTS, position=position, password=password)
+        num_users = dbase.select_all_users(update=message, only_len=True)
 
         from utils.misc.admins_send_message import func_admins_message
+        contact = f'@{message.from_user.username}' if message.from_user.username \
+            else f'<a href="tg://user?id={message.from_user.id}">tg://user?id={message.from_user.id}</a>'
         await func_admins_message(update=message, message=f'&#129395 <b>NEW USER</b>\n'
-                                                          f'<b>User_ID:</b> {message.from_user.id}\n'
-                                                          f'<b>User_name:</b> {message.from_user.full_name}\n')
+                                                          f'<b>ID:</b> {message.from_user.id}\n'
+                                                          f'<b>Name:</b> {message.from_user.full_name}\n'
+                                                          f'<b>Contact:</b> {contact}\n'
+                                                          f'<b>Number in base:</b> {num_users}')
 
-        logger.info(f'-> NEW USER -> name: {message.from_user.full_name} , id: {message.from_user.id}')
+        logger.info(f'-> NEW USER -> name: {message.from_user.full_name} , id: {message.from_user.id}, '
+                    f'name: {message.from_user.full_name}, contact: @{message.from_user.username}')
 
     await state.set_state(state=FSMCommonStates.first_keyboard)
     logger.debug('-> OK -> next state -> first_keyboard')
