@@ -22,6 +22,16 @@ async def func_response(message: Message, state: FSMContext,
         key_id = 'nmId'
     keyboard = await second_keyboard.func_keyboard(update=message)
 
+    # TODO разобраься ответ  WB есть но adverts - пустой список, как использовать другую информацию???
+    # Запрос от user: нож охотничий с чехлом
+    # Запрс к WB: https: // catalog - ads.wildberries.ru / api / v5 / search?keyword = нож%20охотничий%20с%20чехлом
+    # # Вот такой ответ от WB
+    # Ответ WB: {'pages': [{'positions': [1, 2, 11, 12, 14], 'page': 1, 'count': 5},
+    #                {'positions': [1, 2, 13, 15, 18], 'page': 2, 'count': 5}],
+    #                'prioritySubjects': [908, 811, 559, 2636, 1236], 'adverts': []}
+    # print("адвертс:", adverts)
+    # print("респонз:", response)
+
     if adverts and adverts != 'null':
         current_state = await state.get_state()
         line = '&#127760 Реальные ставки рекламы в\n'

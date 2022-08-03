@@ -97,7 +97,7 @@ class Database:
         with self.database:
             self.cursor.execute("SELECT user_id FROM users")
             users = tuple(user[0] for user in self.cursor.fetchall())
-            print(users)
+
         if not users:
             logger.error(f'-> BAD -> NOT users in database -> return -> empty tuple')
             return tuple() if not only_len else 0
