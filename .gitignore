@@ -126,10 +126,10 @@ venv.bak/
 dmypy.json
 
 # Database file
-database/database.db
+#database/database.db
 
 # Pyre type checker
 .pyre/
 .idea/*
-.env
+#.env
 log

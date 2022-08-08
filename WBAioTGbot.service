@@ -1,0 +1,7 @@
+[Service]
+WorkingDirectory=/home/WildberriesAiogramTGbot
+User=root
+ExecStart=/home/WildberriesAiogramTGbot/venv/bin/python3.10 main.py
+[Install]
+WantedBy=multi-user.target
+EOF

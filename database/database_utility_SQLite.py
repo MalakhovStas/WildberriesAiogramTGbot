@@ -112,3 +112,20 @@ class Database:
             password = self.cursor.fetchone()
         logger.debug(f'-> OK -> SELECT password {password}')
         return ''.join(password)
+
+
+#TODO сделать базу данных для аналитики активности пользователей - сначала разработать модель
+    # def create_admin_info_table(self) -> None:
+    #     with self.database:
+    #         self.cursor.execute("""CREATE TABLE IF NOT EXISTS admin_info(
+    #                                 user_id INTEGER PRIMARY KEY NOT NULL,
+    #                                 name TEXT,
+    #                                 username TEXT,
+    #                                 referer_id INTEGER,
+    #                                 balance_requests INTEGER NOT NULL DEFAULT 10,
+    #                                 access TEXT,
+    #                                 start_time_limited INTEGER,
+    #                                 position TEXT,
+    #                                 password TEXT)""")
+    #         self.database.commit()
+    #     logger.debug(f'-> OK -> CREATE TABLE "user" IF NOT EXISTS in database "{config.BD_DATABASE}"')

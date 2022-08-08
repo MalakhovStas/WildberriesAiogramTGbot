@@ -20,13 +20,17 @@ async def func_referal(update: Message, referer_id: int) -> None:
                                         f'+ {config.ADD_TO_BALANCE_PER_REFERAL} к количеству доступных запросов')
 
         elif count_ref == config.NUM_REFERALS_UNLIMIT:
-            dbase.add_to_balance_requests(update=update, user_id=referer_id, add_to_balance=10000000)
+            dbase.add_to_balance_requests(update=update, user_id=referer_id, add_to_balance=config.MEGA_ADD_TO_BALANCE)
             await bot.send_message(chat_id=referer_id,
                                    text=f'&#129395 Новый пользователь по вашей ссылке &#129395\n'
-                                        f'Вам предоставлен безлимитный доступ к запросам')
+                                        f'+ {config.MEGA_ADD_TO_BALANCE} к количеству доступных запросов, '
+                                        f'теперь за каждого последующего реферала + {config.MEGA_ADD_TO_BALANCE}')
         else:
+            dbase.add_to_balance_requests(update=update, user_id=referer_id, add_to_balance=config.MEGA_ADD_TO_BALANCE)
             await bot.send_message(chat_id=referer_id, text=f'&#129395 Новый пользователь по вашей ссылке\n'
-                                                            f'их уже {count_ref}')
+                                                            f'их уже {count_ref}\n'
+                                                            f'+ {config.MEGA_ADD_TO_BALANCE} '
+                                                            f'к количеству доступных запросов')
 
         logger.info(f'-> NEW USER -> from referal link -> referer_id: {referer_id}')
 
