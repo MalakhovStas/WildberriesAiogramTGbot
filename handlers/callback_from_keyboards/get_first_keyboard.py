@@ -22,6 +22,7 @@ async def func_get_first_keyboard(call: CallbackQuery, state: FSMContext, data_f
     await bot.delete_message(chat_id=call.from_user.id, message_id=call.message.message_id)
 
     if data_from_middlewares.balance_requests > 0:
+        # Активировать эту строку для уменьшения баланса запросов
         dbase.minus_from_balance_requests(update=call, user_id=call.from_user.id)
 
         if call.data == 'searching':

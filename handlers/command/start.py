@@ -25,7 +25,9 @@ async def start(message: Message, state: FSMContext, data_from_middlewares) -> N
 
     await bot.send_message(chat_id=message.chat.id, text=f"&#129302")
     time.sleep(1.7)
-    await bot.send_message(chat_id=message.chat.id, text=f"{bot_messages.BotSays.say('user')}", reply_markup=keyboard)
+    message_text = f"{bot_messages.BotSays.say('user')}"
+    # message_text = '<b>Выберите что будем искать:</b>'
+    await bot.send_message(chat_id=message.chat.id, text=message_text, reply_markup=keyboard)
 
     if not data_from_middlewares:
         referer_id = message.text[7:] if len(message.text) > 7 else None
